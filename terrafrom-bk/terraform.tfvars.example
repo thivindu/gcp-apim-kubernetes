@@ -1,0 +1,62 @@
+# Example terraform.tfvars file
+# Copy this file to terraform.tfvars and fill in your values
+
+# GCP Configuration
+project_id = "your-gcp-project-id"
+region     = "us-central1"
+
+# GKE Cluster Configuration
+cluster_name        = "my-gke-cluster"
+network             = "default"
+subnetwork          = "default"
+pods_range_name     = "pods"
+services_range_name = "services"
+release_channel     = "REGULAR"
+deletion_protection = false # Set to true in production
+
+# Node Pool Configuration
+node_count      = 3
+min_node_count  = 1
+max_node_count  = 5
+machine_type    = "e2-medium"
+disk_size_gb    = 100
+disk_type       = "pd-standard"
+preemptible_nodes = false
+
+node_labels = {
+  environment = "dev"
+  team        = "platform"
+}
+
+node_tags = ["gke-node", "kubernetes"]
+
+# Helm Configuration
+helm_release_name = "my-app"
+helm_repository   = "https://charts.bitnami.com/bitnami"
+helm_chart        = "nginx"
+helm_chart_version = "15.4.4"
+helm_namespace    = "default"
+create_namespace  = true
+
+# Example: Set specific values
+helm_set_values = [
+  {
+    name  = "replicaCount"
+    value = "3"
+  },
+  {
+    name  = "service.type"
+    value = "LoadBalancer"
+  }
+]
+
+# Example: Override values with a file
+# helm_values_files = [
+#   "${path.module}/values.yaml"
+# ]
+
+# Helm deployment options
+helm_wait         = true
+helm_timeout      = 600
+helm_force_update = false
+helm_recreate_pods = false
