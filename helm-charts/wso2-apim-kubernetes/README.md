@@ -1,19 +1,416 @@
 # WSO2 APIM Stack Helm Chart
 
-A unified Helm chart for deploying the complete WSO2 API Manager stack on Kubernetes, including:
-- WSO2 API Manager ACP (APIM-ACP) v4.5.0
-- WSO2 APK (API Platform for Kubernetes) v1.3.0
-- WSO2 APIM-APK Agent v1.3.0
+A unified umbrella Helm chart for deploying the complete WSO2 API Manager stack on Kubernetes, including:
+- **WSO2 API Manager ACP (APIM-ACP)** v4.5.0 - API Control Plane
+- **WSO2 APK (API Platform for Kubernetes)** v1.3.0 - Data Plane
+- **WSO2 APIM-APK Agent** v1.3.0 - Integration Agent
 
-All components are deployed to the **default namespace**.
+This chart orchestrates three sub-charts as dependencies to provide a complete API Management solution.
+
+## Architecture
+
+```
+wso2-apim (umbrella chart v4.5.0)
+│
+├── acp (wso2am-acp v4.5.0-1)
+│   └── API Control Plane - Management console, publisher, devportal
+│
+├── apk (apk-helm v1.3.0-1)
+│   └── Data Plane - Gateway runtime, router, enforcer
+│
+└── apkagent (apim-apk-agent v1.3.0)
+    └── Agent - Connects Control Plane with Data Plane
+```
+
+All components are deployed to the **default namespace** (configurable via Helm release namespace).
 
 ## Prerequisites
 
-- Kubernetes cluster (1.24+)
-- Helm 3.x installed
-- kubectl configured to access your cluster
-- **NGINX Ingress Controller** installed manually in your cluster
-- Sufficient cluster resources (CPU, Memory, Storage)
+- **Kubernetes cluster** 1.24+ (1.27+ recommended)
+- **Helm** 3.8+ installed
+- **kubectl** configured to access your cluster
+- **NGINX Ingress Controller** (automatically installed by this chart)
+- **Minimum Resources**: 8GB RAM, 4 CPU cores
+- **Storage**: Persistent volume support (if using StatefulSets)
+
+## Quick Start
+
+### 1. Navigate to Chart Directory
+
+```bash
+cd helm-charts/wso2-apim-kubernetes
+```
+
+### 2. Update Chart Dependencies
+
+Download required sub-charts:
+
+```bash
+helm dependency update
+```
+
+This downloads:
+- `wso2am-acp-4.5.0-1.tgz` - From local charts directory
+- `apk-helm-1.3.0-1.tgz` - From WSO2 APK GitHub releases
+- `apim-apk-agent-1.3.0.tgz` - From WSO2 Product APIM Tooling GitHub releases
+
+### 3. Install the Stack
+
+**Basic installation (all components enabled):**
+
+```bash
+helm install apim .
+```
+
+**With custom namespace:**
+
+```bash
+helm install apim . --namespace wso2 --create-namespace
+```
+
+**With custom values:**
+
+```bash
+helm install apim . -f custom-values.yaml
+```
+
+### 4. Verify Installation
+
+```bash
+# Check helm release
+helm list
+
+# Watch pods come up
+kubectl get pods -w
+
+# Check all resources
+kubectl get all
+
+# Check ingress resources  
+kubectl get ingress
+
+# Check specific component pods
+kubectl get pods -l app.kubernetes.io/instance=apim
+```
+
+## Chart Dependencies
+
+This umbrella chart has three sub-chart dependencies defined in `Chart.yaml`:
+
+| Sub-chart | Version | Repository | Alias | Condition |
+|-----------|---------|------------|-------|-----------|
+| wso2am-acp | 4.5.0-1 | file://charts | acp | acp.enabled |
+| apk-helm | 1.3.0-1 | GitHub | apk | apk.enabled |
+| apim-apk-agent | 1.3.0 | GitHub | apkagent | apkagent.enabled |
+
+## Configuration
+
+### Basic Configuration
+
+Enable or disable components in `values.yaml`:
+
+```yaml
+acp:
+  enabled: true    # WSO2 APIM Control Plane
+
+apk:
+  enabled: true    # WSO2 APK Data Plane
+
+apkagent:
+  enabled: true    # Integration Agent
+```
+
+### Component-Specific Configuration
+
+#### ACP (API Control Plane)
+
+```yaml
+acp:
+  wso2:
+    apim:
+      version: "4.5.0"
+      secureVaultEnabled: false
+      portOffset: 0
+      configurations:
+        # Add APIM TOML configurations here
+        userStore: |
+          [user_store]
+          type = "database"
+```
+
+#### APK (Data Plane)
+
+```yaml
+apk:
+  wso2:
+    apk:
+      auth:
+        enabled: true
+        enableServiceAccountCreation: true
+        serviceAccountName: wso2apk-platform
+      webhooks:
+        validatingwebhookconfigurations: false
+        mutatingwebhookconfigurations: false
+```
+
+#### APK Agent
+
+```yaml
+apkagent:
+  replicaCount: 1
+  image:
+    repository: wso2/apim-apk-agent
+    tag: 1.3.0
+  controlPlane:
+    serviceURL: https://apim-acp-1-service.default.svc.cluster.local:9443/
+    username: admin
+    password: admin
+    environmentLabels: Default_apk
+  dataPlane:
+    k8ResourceEndpoint: https://apim-wso2-apk-config-ds-service.default.svc.cluster.local:9443/api/configurator/apis/generate-k8s-resources
+    namespace: default
+```
+
+### Resource Configuration
+
+Adjust resources for each component:
+
+```yaml
+apkagent:
+  resources:
+    requests:
+      memory: "128Mi"
+      cpu: "100m"
+    limits:
+      memory: "256Mi"
+      cpu: "200m"
+```
+
+## Advanced Configuration
+
+### Disable Specific Components
+
+Install only the components you need:
+
+```yaml
+acp:
+  enabled: true    # Control Plane only
+apk:
+  enabled: false
+apkagent:
+  enabled: false
+```
+
+### Custom Values Per Sub-chart
+
+Override any sub-chart values using the alias prefix:
+
+```yaml
+acp:
+  # All wso2am-acp chart values
+  kubernetes:
+    ingressClass: "nginx"
+  wso2:
+    deployment:
+      replicas: 2
+
+apk:
+  # All apk-helm chart values
+  wso2:
+    apk:
+      dp:
+        enabled: true
+
+apkagent:
+  # All apim-apk-agent chart values
+  replicaCount: 2
+```
+
+## Upgrading
+
+### Update Dependencies
+
+```bash
+helm dependency update
+```
+
+### Upgrade Release
+
+```bash
+helm upgrade apim . -f custom-values.yaml
+```
+
+### Rolling Back
+
+```bash
+helm rollback apim
+```
+
+## Uninstalling
+
+Remove the complete stack:
+
+```bash
+# Uninstall the release
+helm uninstall apim
+
+# Clean up PVCs if needed
+kubectl delete pvc --all
+
+# Remove namespace (if custom namespace was used)
+kubectl delete namespace wso2
+```
+
+## Troubleshooting
+
+### Check Sub-chart Status
+
+```bash
+# List all pods
+kubectl get pods
+
+# Check logs for ACP
+kubectl logs -l app.kubernetes.io/name=wso2am-acp
+
+# Check logs for APK
+kubectl logs -l app.kubernetes.io/name=apk
+
+# Check logs for APK Agent
+kubectl logs -l app.kubernetes.io/name=apim-apk-agent
+```
+
+### Common Issues
+
+**Dependency Download Failed:**
+```bash
+# Clear Helm cache
+rm -rf ~/.cache/helm
+
+# Update dependencies again
+helm dependency update
+```
+
+**Pods Stuck in Pending:**
+```bash
+# Check PVC status
+kubectl get pvc
+
+# Check node resources
+kubectl describe nodes
+
+# Check events
+kubectl get events --sort-by='.lastTimestamp'
+```
+
+**ImagePullBackOff:**
+```bash
+# Check if imagePullSecrets are configured
+kubectl get secrets
+
+# Verify image exists
+kubectl describe pod <pod-name> | grep -A5 Events
+```
+
+**Ingress Not Working:**
+```bash
+# Verify NGINX Ingress Controller
+kubectl get pods -n ingress-nginx
+
+# Check ingress resources
+kubectl get ingress -o yaml
+
+# Verify DNS/hostname configuration
+kubectl describe ingress
+```
+
+**Connection Issues Between Components:**
+```bash
+# Verify service endpoints
+kubectl get svc
+kubectl get endpoints
+
+# Test connectivity from within cluster
+kubectl run test-pod --rm -it --image=busybox -- sh
+# Then: wget -O- http://service-name:port
+```
+
+### Validation
+
+```bash
+# Render templates without installing
+helm template apim . --debug
+
+# Dry run installation
+helm install apim . --dry-run --debug
+
+# Check dependency status
+helm dependency list
+```
+
+## Chart Structure
+
+```
+wso2-apim-kubernetes/
+├── Chart.yaml              # Chart metadata and dependencies
+├── values.yaml             # Default configuration values
+├── values-bk.yaml          # Backup/alternative values
+├── charts/                 # Sub-chart archives (after helm dependency update)
+│   ├── wso2am-acp-4.5.0-1.tgz
+│   ├── apk-helm-1.3.0-1.tgz
+│   └── apim-apk-agent-1.3.0.tgz
+├── templates/
+│   └── _helpers.tpl        # Template helper functions
+├── README.md               # This file
+├── INSTALL.md              # Quick installation guide
+└── PATCHING-NOTES.md       # Patching and maintenance notes
+```
+
+## Default Services Created
+
+After installation, the following services are created in the default namespace:
+
+### ACP Services
+- `apim-acp-1-service` - APIM Control Plane (ports: 9443, 8243, 8280, 5672)
+
+### APK Services
+- `apim-wso2-apk-config-ds-service` - APK Config Deployer
+- `apim-wso2-apk-adapter-service` - APK Adapter
+- `apim-wso2-apk-common-controller-service` - Common Controller
+- `apim-wso2-apk-gateway-service` - Gateway Runtime
+- `apim-wso2-apk-router-service` - Envoy Router
+- `apim-wso2-apk-ratelimiter-service` - Rate Limiter
+
+### APK Agent Services
+- `apim-apk-agent-service` - APK Agent
+
+## Accessing the Deployment
+
+### Default URLs (after configuring DNS/hosts file)
+
+- **Publisher Portal**: https://am.wso2.com/publisher
+- **Developer Portal**: https://am.wso2.com/devportal
+- **Admin Portal**: https://am.wso2.com/admin
+- **Gateway**: https://api.am.wso2.com
+
+**Default Credentials**: `admin` / `admin`
+
+### Configure DNS
+
+Add entries to your `/etc/hosts` file:
+
+```bash
+<EXTERNAL-IP>  am.wso2.com
+<EXTERNAL-IP>  api.am.wso2.com
+<EXTERNAL-IP>  idp.am.wso2.com
+```
+
+Get the external IP:
+
+```bash
+kubectl get ingress
+# or
+kubectl get svc -n ingress-nginx ingress-nginx-controller
+```
 
 ## Quick Start
 
@@ -281,9 +678,6 @@ With this unified chart, all three components can be installed with a single com
 helm install wso2-apim-kubernetes .
 ```
 
-## License
-
-This chart is provided as-is. Please refer to WSO2's licensing for their components.
 
 ## Support
 
