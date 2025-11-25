@@ -1,0 +1,233 @@
+# =============================================================================
+# WSO2 APIM on GKE - Terraform Variables Configuration
+# =============================================================================
+# Copy this file to terraform.tfvars and update with your actual values
+# 
+# Usage:
+#   cp terraform.tfvars.example terraform.tfvars
+#   vim terraform.tfvars
+#   terraform init
+#   terraform apply
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# GCP Configuration
+# -----------------------------------------------------------------------------
+
+# GCP project ID where resources will be created
+project_id = "my-gcp-project-id"
+
+# The GCP region for the cluster and resources
+region = "us-east1"
+
+# Whether to create a new service account for the cluster
+# Set to true if you want Terraform to create a service account
+create_cluster_service_account = false
+
+# Email of existing service account to use (if create_cluster_service_account = false)
+# Leave empty to use default compute service account
+cluster_service_account = ""
+
+# -----------------------------------------------------------------------------
+# GKE Cluster Configuration
+# -----------------------------------------------------------------------------
+
+# Name of the GKE cluster to create
+cluster_name = "wso2-apim-cluster"
+
+# The location (region or zone) for the GKE cluster
+# Use region for high availability: "us-central1"
+# Use zone for cost savings: "us-central1-a"
+cluster_location = "us-east1"
+
+# Whether to create a new GKE cluster or use existing one
+create_cluster = true
+
+# Kubernetes version for the cluster
+kubernetes_version = "1.32"
+
+# -----------------------------------------------------------------------------
+# Node Pool Configuration
+# -----------------------------------------------------------------------------
+
+# Configuration for CPU-based node pools
+# You can define multiple node pools for different workloads
+cpu_pools = [{
+  name         = "cpu-pool"
+  machine_type = "n1-standard-16"  # Options: e2-medium, n1-standard-4, n1-standard-8, n1-standard-16
+  autoscaling  = true
+  min_count    = 1
+  max_count    = 3
+  disk_size_gb = 100
+  disk_type    = "pd-standard"  # Options: pd-standard, pd-ssd
+}]
+
+# GPU Configuration (optional)
+# Set to true only if you need GPU nodes
+enable_gpu = false
+
+# GPU node pools configuration (only used if enable_gpu = true)
+# gpu_pools = [{
+#   name         = "gpu-pool"
+#   machine_type = "n1-standard-4"
+#   gpu_type     = "nvidia-tesla-t4"  # Options: nvidia-tesla-t4, nvidia-tesla-k80, nvidia-tesla-p4
+#   gpu_count    = 1
+#   autoscaling  = true
+#   min_count    = 0
+#   max_count    = 2
+#   disk_size_gb = 100
+#   disk_type    = "pd-standard"
+# }]
+
+# TPU Configuration (optional)
+# Set to true only if you need TPU nodes
+enable_tpu = false
+
+# TPU node pools configuration (only used if enable_tpu = true)
+# tpu_pools = []
+
+# -----------------------------------------------------------------------------
+# Networking Configuration
+# -----------------------------------------------------------------------------
+
+# Name of the VPC network to use
+network_name = "default"
+
+# Name of the subnetwork to use
+subnetwork_name = "default"
+
+# Region of the subnetwork
+subnetwork_region = "us-east1"
+
+# Secondary IP range name for pods (optional)
+# Leave empty to use default
+ip_range_pods = ""
+
+# Secondary IP range name for services (optional)
+# Leave empty to use default
+ip_range_services = ""
+
+# -----------------------------------------------------------------------------
+# Helm Configuration
+# -----------------------------------------------------------------------------
+
+# Name for the Helm release
+helm_release_name = "apim"
+
+# Helm chart repository URL
+# For remote chart: "oci://us-docker.pkg.dev/wso2-marketplace-public/wso2-marketplace"
+# For local chart: leave empty ""
+helm_chart_repo = "oci://us-docker.pkg.dev/wso2-marketplace-public/wso2-marketplace"
+
+# Helm chart name
+# For remote chart: "wso2-apim"
+# For local chart: "../helm-charts/wso2-apim-kubernetes"
+helm_chart_name = "wso2-apim"
+
+# Helm chart version
+# For remote chart: "4.5"
+# For local chart: leave empty ""
+helm_chart_version = "4.5"
+
+# -----------------------------------------------------------------------------
+# Container Images Configuration
+# -----------------------------------------------------------------------------
+# All images are pulled from GCP Artifact Registry
+# Modify these if you're using a custom registry or different versions
+
+# ACP (API Control Plane) Image
+acp_image_registry = "us-docker.pkg.dev"
+acp_image_repo     = "wso2-marketplace-public/wso2-marketplace/wso2am-acp"
+acp_image_tag      = "4.5"
+
+# APK Config Deployer Image
+apk_config_deployer_image_registry = "us-docker.pkg.dev"
+apk_config_deployer_image_repo     = "wso2-marketplace-public/wso2-marketplace/apk-config-deployer-service"
+apk_config_deployer_image_tag      = "4.5"
+
+# APK Adapter Image
+apk_adapter_image_registry = "us-docker.pkg.dev"
+apk_adapter_image_repo     = "wso2-marketplace-public/wso2-marketplace/apk-adapter"
+apk_adapter_image_tag      = "4.5"
+
+# APK Common Controller Image
+apk_common_controller_image_registry = "us-docker.pkg.dev"
+apk_common_controller_image_repo     = "wso2-marketplace-public/wso2-marketplace/apk-common-controller"
+apk_common_controller_image_tag      = "4.5"
+
+# APK Ratelimiter Image
+apk_ratelimiter_image_registry = "us-docker.pkg.dev"
+apk_ratelimiter_image_repo     = "wso2-marketplace-public/wso2-marketplace/apk-ratelimiter"
+apk_ratelimiter_image_tag      = "4.5"
+
+# APK Router Image
+apk_router_image_registry = "us-docker.pkg.dev"
+apk_router_image_repo     = "wso2-marketplace-public/wso2-marketplace/apk-router"
+apk_router_image_tag      = "4.5"
+
+# APK Enforcer Image
+apk_enforcer_image_registry = "us-docker.pkg.dev"
+apk_enforcer_image_repo     = "wso2-marketplace-public/wso2-marketplace/apk-enforcer"
+apk_enforcer_image_tag      = "4.5"
+
+# APK Agent Image (uses full repository path)
+apk_agent_image_repo = "us-docker.pkg.dev/wso2-marketplace-public/wso2-marketplace/apim-apk-agent"
+apk_agent_image_tag  = "4.5"
+
+# =============================================================================
+# Configuration Examples for Different Scenarios
+# =============================================================================
+
+# Example 1: Development Environment (smaller resources, local chart)
+# -----------------------------------------------------------------------------
+# project_id = "my-dev-project"
+# region     = "us-east1"
+# cluster_name     = "wso2-apim-dev"
+# cluster_location = "us-east1-b"  # Single zone
+# cpu_pools = [{
+#   name         = "dev-pool"
+#   machine_type = "e2-medium"
+#   autoscaling  = true
+#   min_count    = 1
+#   max_count    = 2
+#   disk_size_gb = 50
+#   disk_type    = "pd-standard"
+# }]
+# helm_chart_repo    = ""
+# helm_chart_name    = "../helm-charts/wso2-apim-kubernetes"
+# helm_chart_version = ""
+
+# Example 2: Production Environment (high availability, autoscaling)
+# -----------------------------------------------------------------------------
+# project_id = "my-prod-project"
+# region     = "us-central1"
+# cluster_name     = "wso2-apim-production"
+# cluster_location = "us-central1"  # Regional cluster
+# kubernetes_version = "1.30"
+# cpu_pools = [{
+#   name         = "apim-pool"
+#   machine_type = "n1-standard-16"
+#   autoscaling  = true
+#   min_count    = 3
+#   max_count    = 10
+#   disk_size_gb = 200
+#   disk_type    = "pd-ssd"
+# }]
+# network_name      = "wso2-prod-vpc"
+# subnetwork_name   = "wso2-apim-subnet"
+# ip_range_pods     = "gke-pods"
+# ip_range_services = "gke-services"
+
+# Example 3: Using Existing GKE Cluster
+# -----------------------------------------------------------------------------
+# create_cluster   = false
+# cluster_name     = "existing-gke-cluster"
+# cluster_location = "us-east1"
+# helm_release_name  = "apim"
+
+# Example 4: Custom Image Registry
+# -----------------------------------------------------------------------------
+# acp_image_registry = "gcr.io"
+# acp_image_repo     = "my-company/wso2am-acp"
+# acp_image_tag      = "4.5.0-custom"
+# # ... configure other images similarly ...

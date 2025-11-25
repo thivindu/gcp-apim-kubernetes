@@ -440,21 +440,23 @@ acp:
           
     deployment:
       # Container image configurations
-      image:
+      # image:
         # -- Container registry credentials.
         # Specify image pull secrets for private registries
-        imagePullSecrets:
-          enabled: false
-          username: ""
-          password: ""
+        # imagePullSecrets:
+        #   enabled: false
+        #   username: ""
+        #   password: ""
+      image: "wso2/wso2am-acp:4.5.0-alpine"
+
         # -- Registry containing the image
-        registry: "docker.io"
+        # registry: "us-east1-docker.pkg.dev"
         # -- Repository name consisting the image
-        repository: "wso2/wso2am-acp:4.5.0-alpine"
+        # repository: "wso2-marketplace-public/wso2-marketplace/wso2am-acp"
         # -- Docker image digest
-        digest: "sha256:e82b9e836baa12cd5b29b78928f323f6e3279c0326b3dab82a6d826978ef8f71"
+        # digest: "sha256:fdcd07d7e5d1fbfa30d8c9633c54454238c74df8f7e47e3e63e5ac27b07f1cb6"
         # -- Refer to the Kubernetes documentation on updating images (https://kubernetes.io/docs/concepts/containers/images/#updating-images)
-        imagePullPolicy: Always
+      imagePullPolicy: Always
 
       resources:
         # These are the resource recommendations for running WSO2 API Management product profiles with profile optimization
@@ -543,14 +545,14 @@ apk:
 
     apk:
       helmHooks:
-        webhooksCleanupEnabled: true
+        webhooksCleanupEnabled: false
         webhooksCleanup:
-          enabled : true
+          enabled : false
           image: "bitnamilegacy/kubectl:1.31.1"
       webhooks:
-        validatingwebhookconfigurations: true
-        mutatingwebhookconfigurations: true
-        conversionwebhookconfigurations: true
+        validatingwebhookconfigurations: false
+        mutatingwebhookconfigurations: false
+        conversionwebhookconfigurations: false
       auth:
         enabled: true
         enableServiceAccountCreation: true
@@ -1015,5 +1017,5 @@ global:
 # GCP Marketplace Configuration
 # Required for billing tracking
 marketplace:
-  serviceName: "wso2-apim-kubernetes"
+  serviceName: "wso2-apimanager.endpoints.wso2-marketplace-public.cloud.goog"
   serviceLevel: "default"

@@ -78,19 +78,23 @@ resource "helm_release" "primary" {
   ]
 
   # ACP Image Configuration
-  set {
-    name  = "acp.wso2.deployment.image.registry"
-    value = var.acp_image_registry
-  }
+  # set {
+  #   name  = "acp.wso2.deployment.image.registry"
+  #   value = var.acp_image_registry
+  # }
 
-  set {
-    name  = "acp.wso2.deployment.image.repository"
-    value = var.acp_image_repo
-  }
+  # set {
+  #   name  = "acp.wso2.deployment.image.repository"
+  #   value = var.acp_image_repo
+  # }
 
+  # set {
+  #   name  = "acp.wso2.deployment.image.digest"
+  #   value = var.acp_image_digest
+  # }
   set {
-    name  = "acp.wso2.deployment.image.digest"
-    value = var.acp_image_digest
+    name  = "acp.wso2.deployment.image"
+    value = "${var.acp_image_registry}/${var.acp_image_repo}:${var.acp_image_tag}"
   }
 
   # APK Config Deployer Image

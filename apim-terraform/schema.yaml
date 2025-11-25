@@ -19,8 +19,8 @@ images:
         type: REGISTRY
       acp_image_repo:
         type: REPO_WITHOUT_REGISTRY_WITH_NAME
-      acp_image_digest:
-        type: DIGEST
+      acp_image_tag:
+        type: TAG
   
   apk-config-deployer-service:
     variables:

@@ -12,23 +12,24 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-terraform {
-  required_providers {
-    google = {
-      source  = "hashicorp/google"
-      version = ">= 7.0.0, < 8.0.0"
-    }
-    google-beta = {
-      source  = "hashicorp/google-beta"
-      version = ">= 7.0.0, < 8.0.0"
-    }
-    helm = {
-      source  = "hashicorp/helm"
-      version = "~> 2.8.0"
-    }
-    kubernetes = {
-      source  = "hashicorp/kubernetes"
-      version = "~> 2.10"
-    }
-  }
+output "gke_cluster_name" {
+  value       = local.cluster_name
+  description = "GKE cluster name"
 }
+
+output "gke_cluster_location" {
+  value       = var.cluster_location
+  description = "GKE cluster location"
+}
+
+output "gke_cluster_service_account" {
+  value       = var.cluster_service_account
+  description = "Service account"
+}
+
+output "project_id" {
+  value       = var.project_id
+  description = "GCP project ID"
+}
+
+# TODO: Add outputs for your app

@@ -15,6 +15,7 @@
 variable "project_id" {
   type        = string
   description = "GCP project id"
+  default     = "wso2-marketplace-public"
 }
 
 variable "region" {
@@ -37,13 +38,13 @@ variable "cluster_service_account" {
 
 variable "helm_release_name" {
   type    = string
-  default = ""
+  default = "apim"
 }
 
 variable "helm_chart_repo" {
   type        = string
   description = "Helm chart repository URL. Leave empty for local charts."
-  default     = "oci://us-east1-docker.pkg.dev/wso2-marketplace-public/wso2-marketplace"
+  default     = "oci://us-docker.pkg.dev/wso2-marketplace-public/wso2-marketplace"
 }
 
 variable "helm_chart_name" {
@@ -55,7 +56,7 @@ variable "helm_chart_name" {
 variable "helm_chart_version" {
   type        = string
   description = "Helm chart version. Leave empty for local charts."
-  default     = "4.5.0"
+  default     = "4.5"
 }
 
 # GKE
@@ -66,12 +67,12 @@ variable "kubernetes_version" {
 }
 
 variable "cluster_name" {
-  type = string
+  type    = string
   default = "wso2-apim"
 }
 
 variable "cluster_location" {
-  type = string
+  type    = string
   default = "us-east1"
 }
 
@@ -146,7 +147,7 @@ variable "subnetwork_region" {
 variable "acp_image_registry" {
   type        = string
   description = "Registry for WSO2 APIM ACP image"
-  default     = "us-east1-docker.pkg.dev"
+  default     = "us-docker.pkg.dev"
 }
 
 variable "acp_image_repo" {
@@ -155,17 +156,17 @@ variable "acp_image_repo" {
   default     = "wso2-marketplace-public/wso2-marketplace/wso2am-acp"
 }
 
-variable "acp_image_digest" {
+variable "acp_image_tag" {
   type        = string
-  description = "Digest for WSO2 APIM ACP image"
-  default     = "sha256:fdcd07d7e5d1fbfa30d8c9633c54454238c74df8f7e47e3e63e5ac27b07f1cb6"
+  description = "Tag for WSO2 APIM ACP image"
+  default     = "4.5"
 }
 
 # APK Config Deployer Image Variables
 variable "apk_config_deployer_image_registry" {
   type        = string
   description = "Registry for APK Config Deployer image"
-  default     = "us-east1-docker.pkg.dev"
+  default     = "us-docker.pkg.dev"
 }
 
 variable "apk_config_deployer_image_repo" {
@@ -177,14 +178,14 @@ variable "apk_config_deployer_image_repo" {
 variable "apk_config_deployer_image_tag" {
   type        = string
   description = "Tag for APK Config Deployer image"
-  default     = "1.3.0"
+  default     = "4.5"
 }
 
 # APK Adapter Image Variables
 variable "apk_adapter_image_registry" {
   type        = string
   description = "Registry for APK Adapter image"
-  default     = "us-east1-docker.pkg.dev"
+  default     = "us-docker.pkg.dev"
 }
 
 variable "apk_adapter_image_repo" {
@@ -196,14 +197,14 @@ variable "apk_adapter_image_repo" {
 variable "apk_adapter_image_tag" {
   type        = string
   description = "Tag for APK Adapter image"
-  default     = "1.3.0"
+  default     = "4.5"
 }
 
 # APK Common Controller Image Variables
 variable "apk_common_controller_image_registry" {
   type        = string
   description = "Registry for APK Common Controller image"
-  default     = "us-east1-docker.pkg.dev"
+  default     = "us-docker.pkg.dev"
 }
 
 variable "apk_common_controller_image_repo" {
@@ -215,14 +216,14 @@ variable "apk_common_controller_image_repo" {
 variable "apk_common_controller_image_tag" {
   type        = string
   description = "Tag for APK Common Controller image"
-  default     = "1.3.0"
+  default     = "4.5"
 }
 
 # APK Ratelimiter Image Variables
 variable "apk_ratelimiter_image_registry" {
   type        = string
   description = "Registry for APK Ratelimiter image"
-  default     = "us-east1-docker.pkg.dev"
+  default     = "us-docker.pkg.dev"
 }
 
 variable "apk_ratelimiter_image_repo" {
@@ -234,14 +235,14 @@ variable "apk_ratelimiter_image_repo" {
 variable "apk_ratelimiter_image_tag" {
   type        = string
   description = "Tag for APK Ratelimiter image"
-  default     = "1.3.0"
+  default     = "4.5"
 }
 
 # APK Router Image Variables
 variable "apk_router_image_registry" {
   type        = string
   description = "Registry for APK Router image"
-  default     = "us-east1-docker.pkg.dev"
+  default     = "us-docker.pkg.dev"
 }
 
 variable "apk_router_image_repo" {
@@ -253,14 +254,14 @@ variable "apk_router_image_repo" {
 variable "apk_router_image_tag" {
   type        = string
   description = "Tag for APK Router image"
-  default     = "1.3.0"
+  default     = "4.5"
 }
 
 # APK Enforcer Image Variables
 variable "apk_enforcer_image_registry" {
   type        = string
   description = "Registry for APK Enforcer image"
-  default     = "us-east1-docker.pkg.dev"
+  default     = "us-docker.pkg.dev"
 }
 
 variable "apk_enforcer_image_repo" {
@@ -272,18 +273,18 @@ variable "apk_enforcer_image_repo" {
 variable "apk_enforcer_image_tag" {
   type        = string
   description = "Tag for APK Enforcer image"
-  default     = "1.3.0"
+  default     = "4.5"
 }
 
 # APK Agent Image Variables
 variable "apk_agent_image_repo" {
   type        = string
   description = "Full repository path with registry for APK Agent image"
-  default     = "us-east1-docker.pkg.dev/wso2-marketplace-public/wso2-marketplace/apim-apk-agent"
+  default     = "us-docker.pkg.dev/wso2-marketplace-public/wso2-marketplace/apim-apk-agent"
 }
 
 variable "apk_agent_image_tag" {
   type        = string
   description = "Tag for APK Agent image"
-  default     = "1.3.0"
+  default     = "4.5"
 }
