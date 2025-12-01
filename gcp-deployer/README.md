@@ -2,6 +2,23 @@
 
 This directory contains the deployer image structure for deploying WSO2 APIM on Google Cloud Platform (GCP) Marketplace.
 
+## Deployment Options
+
+- **[Cloud Console Deployment](https://console.cloud.google.com/marketplace)** - Deploy via GCP Marketplace UI
+- **[Command Line Deployment](CLI-DEPLOYMENT.md)** - Deploy using kubectl, Helm, or mpdev
+- **[Quick Start Guide](GETTING-STARTED.md)** - Step-by-step deployment guide
+
+## Quick Deploy via CLI
+
+For command-line deployment, use the interactive script:
+
+```bash
+cd gcp-deployer
+./deploy-cli.sh
+```
+
+See [CLI-DEPLOYMENT.md](CLI-DEPLOYMENT.md) for detailed command-line instructions.
+
 ## Structure
 
 ```
@@ -10,10 +27,15 @@ gcp-deployer/
 ├── Makefile                        # Build and deployment automation
 ├── schema.yaml                     # GCP Marketplace schema definition
 ├── .dockerignore                   # Docker build exclusions
-├── apptest/
-│   └── deployer/
-│       └── schema.yaml            # App test schema
+├── data-test/                     # Test configuration for verification
+│   ├── schema.yaml               # Test schema
+│   └── chart/
+│       └── templates/
+│           └── tester.yaml       # Test pod manifest
 ├── chart/                         # Helm chart (copy from helm-charts/wso2-apim-kubernetes/)
+├── CLI-DEPLOYMENT.md              # Command-line deployment guide
+├── deploy-cli.sh                  # Quick CLI deployment script
+├── GETTING-STARTED.md             # Comprehensive setup guide
 └── README.md                      # This file
 ```
 
@@ -56,14 +78,14 @@ gcloud container clusters get-credentials $CLUSTER --zone=$ZONE
 cd gcp-deployer
 
 # Set the registry and app details
-export REGISTRY=gcr.io/$PROJECT
-export APP_ID=wso2-apim
+export REGISTRY=us-docker.pkg.dev/wso2-marketplace-public
+export APP_ID=wso2-marketplace
 export RELEASE=4.5.0
 
 # Build the deployer image
 docker build \
   --build-arg MARKETPLACE_TOOLS_TAG=latest \
-  --tag $REGISTRY/$APP_ID/deployer:$RELEASE \
+  --tag us-docker.pkg.dev/wso2-marketplace-public/wso2-marketplace/deployer:4.5.0 \
   -f Dockerfile .
 ```
 

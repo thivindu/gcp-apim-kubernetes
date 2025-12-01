@@ -34,6 +34,7 @@ fi
 # Set default values
 APP_ID=${APP_ID:-"wso2-apim"}
 RELEASE=${RELEASE:-"4.5.0"}
+TRACK=${TRACK:-"4.5"}  # Semantic minor version for Marketplace
 REGISTRY=${REGISTRY:-"gcr.io/$PROJECT"}
 MARKETPLACE_TOOLS_TAG=${MARKETPLACE_TOOLS_TAG:-"latest"}
 
@@ -42,6 +43,7 @@ print_info "Project: $PROJECT"
 print_info "Registry: $REGISTRY"
 print_info "App ID: $APP_ID"
 print_info "Release: $RELEASE"
+print_info "Track: $TRACK"
 
 # Check if chart directory exists
 if [ ! -d "chart" ]; then
@@ -69,8 +71,10 @@ print_info "Building Docker image..."
 docker build \
     --build-arg MARKETPLACE_TOOLS_TAG="$MARKETPLACE_TOOLS_TAG" \
     --tag "$REGISTRY/$APP_ID/deployer:$RELEASE" \
-    --tag "$REGISTRY/$APP_ID/deployer:latest" \
+    --tag "$REGISTRY/$APP_ID/deployer:$TRACK" \
     -f Dockerfile .
+
+
 
 if [ $? -eq 0 ]; then
     print_info "Docker image built successfully"
@@ -80,22 +84,30 @@ else
 fi
 
 # Configure Docker authentication
-print_info "Configuring Docker authentication for GCR..."
-gcloud auth configure-docker --quiet
+if [[ "$REGISTRY" == *"pkg.dev"* ]]; then
+    # Artifact Registry
+    print_info "Configuring Docker authentication for Artifact Registry..."
+    LOCATION=$(echo "$REGISTRY" | cut -d'/' -f1 | cut -d'-' -f1)
+    gcloud auth configure-docker ${LOCATION}-docker.pkg.dev --quiet
+else
+    # Container Registry (GCR)
+    print_info "Configuring Docker authentication for GCR..."
+    gcloud auth configure-docker --quiet
+fi
 
 # Push the images
 print_info "Pushing image: $REGISTRY/$APP_ID/deployer:$RELEASE"
 docker push "$REGISTRY/$APP_ID/deployer:$RELEASE"
 
-print_info "Pushing image: $REGISTRY/$APP_ID/deployer:latest"
-docker push "$REGISTRY/$APP_ID/deployer:latest"
+print_info "Pushing image: $REGISTRY/$APP_ID/deployer:$TRACK"
+docker push "$REGISTRY/$APP_ID/deployer:$TRACK"
 
 if [ $? -eq 0 ]; then
     print_info "Images pushed successfully"
     echo ""
     print_info "Deployer image is ready at:"
-    echo "  $REGISTRY/$APP_ID/deployer:$RELEASE"
-    echo "  $REGISTRY/$APP_ID/deployer:latest"
+    echo "  $REGISTRY/$APP_ID/deployer:$RELEASE (full version)"
+    echo "  $REGISTRY/$APP_ID/deployer:$TRACK (track/minor version)"
 else
     print_error "Failed to push images"
     exit 1

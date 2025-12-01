@@ -1,9 +1,0 @@
-x-google-marketplace:
-  schemaVersion: v2
-  applicationApiVersion: v1beta1
-
-properties:
-  testRunnerImage:
-    type: string
-    x-google-marketplace:
-      type: IMAGE

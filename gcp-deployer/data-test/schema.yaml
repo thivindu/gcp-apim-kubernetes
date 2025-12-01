@@ -1,0 +1,15 @@
+x-google-marketplace:
+  schemaVersion: v2
+  applicationApiVersion: v1beta1
+
+properties:
+  # Tester image for running verification tests
+  tester.image:
+    type: string
+    x-google-marketplace:
+      type: IMAGE
+      image:
+        generatedProperties:
+          splitByColon:
+            before: tester.image.repository
+            after: tester.image.tag

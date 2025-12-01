@@ -21,11 +21,49 @@ x-google-marketplace:
   #   k8sVersion: ">=1.24.0"
 
   images:
-    "":
+    # Main APIM Control Plane image
+    wso2am-acp:
       properties:
-        wso2.deployment.wso2.image.repository:
+        acp.deployment.image:
+          type: FULL
+
+    # APK images
+    apk-config-deployer-service:
+      properties:
+        apk.wso2.apk.dp.configdeployer.deployment.image:
+          type: FULL
+
+    apk-adapter:
+      properties:
+        apk.wso2.apk.dp.adapter.deployment.image:
+          type: FULL
+
+    apk-common-controller:
+      properties:
+        apk.wso2.apk.dp.commonController.deployment.image:
+          type: FULL
+
+    apk-ratelimiter:
+      properties:
+        apk.wso2.apk.dp.ratelimiter.deployment.image:
+          type: FULL
+
+    apk-router:
+      properties:
+        apk.wso2.apk.dp.gatewayRuntime.deployment.router.image:
+          type: FULL
+
+    apk-enforcer:
+      properties:
+        apk.wso2.apk.dp.gatewayRuntime.deployment.enforcer.image:
+          type: FULL
+
+    # APK Agent image
+    apim-apk-agent:
+      properties:
+        apkagent.image.repository:
           type: REPO_WITH_REGISTRY
-        wso2.deployment.wso2.image.tag:
+        apkagent.image.tag:
           type: TAG
 
 properties:
