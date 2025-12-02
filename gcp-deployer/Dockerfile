@@ -6,7 +6,7 @@ LABEL com.googleapis.cloudmarketplace.product.service.name="services/wso2-apim-a
 
 # Copy the Helm chart tarball into /data/chart/ directory
 # The deployer will find and extract all *.tar.gz files in this directory
-COPY chart.tar.gz /data/chart/wso2-apim.tar.gz
+COPY chart.tar.gz /data/chart/chart.tar.gz
 
 # Copy the Marketplace deployer schema
 COPY schema.yaml /data/schema.yaml
