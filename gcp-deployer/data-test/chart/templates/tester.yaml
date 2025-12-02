@@ -1,0 +1,97 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "{{ .Release.Name }}-test"
+  labels:
+    app.kubernetes.io/name: {{ .Release.Name }}
+  annotations:
+    marketplace.cloud.google.com/verification: test
+spec:
+  restartPolicy: Never
+  serviceAccountName: {{ .Release.Name }}-test-sa
+  containers:
+  - name: tester
+    image: "{{ .Values.tester.image.repository }}:{{ .Values.tester.image.tag }}"
+    env:
+    - name: NAMESPACE
+      valueFrom:
+        fieldRef:
+          fieldPath: metadata.namespace
+    - name: APP_INSTANCE_NAME
+      value: {{ .Release.Name }}
+    command:
+    - "/bin/bash"
+    - "-ec"
+    - |
+      set -x
+      
+      echo "Starting verification tests for {{ .Release.Name }}"
+      echo "Namespace: ${NAMESPACE}"
+      
+      # Wait for application to be ready
+      echo "Waiting 60 seconds for application to stabilize..."
+      sleep 60
+      
+      # Check if Application resource exists
+      echo "Checking Application resource..."
+      if kubectl get application "${APP_INSTANCE_NAME}" -n "${NAMESPACE}" >/dev/null 2>&1; then
+        echo "✓ Application ${APP_INSTANCE_NAME} found"
+      else
+        echo "✗ Application ${APP_INSTANCE_NAME} not found"
+        exit 1
+      fi
+      
+      # Check pods
+      echo "Checking pods in namespace ${NAMESPACE}..."
+      kubectl get pods -n "${NAMESPACE}"
+      
+      POD_COUNT=$(kubectl get pods -n "${NAMESPACE}" --no-headers 2>/dev/null | wc -l)
+      echo "Found ${POD_COUNT} pods"
+      
+      # Check for any failing pods
+      FAILED_PODS=$(kubectl get pods -n "${NAMESPACE}" --field-selector=status.phase=Failed --no-headers 2>/dev/null | wc -l)
+      if [ "$FAILED_PODS" -gt 0 ]; then
+        echo "⚠ Warning: Found ${FAILED_PODS} failed pods"
+        kubectl get pods -n "${NAMESPACE}" --field-selector=status.phase=Failed
+      fi
+      
+      echo "✓ Verification tests passed"
+      exit 0
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: {{ .Release.Name }}-test-sa
+  labels:
+    app.kubernetes.io/name: {{ .Release.Name }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: {{ .Release.Name }}-test-role
+  labels:
+    app.kubernetes.io/name: {{ .Release.Name }}
+rules:
+- apiGroups: [""]
+  resources: ["pods", "services", "configmaps", "secrets"]
+  verbs: ["get", "list"]
+- apiGroups: ["apps"]
+  resources: ["deployments", "statefulsets"]
+  verbs: ["get", "list"]
+- apiGroups: ["app.k8s.io"]
+  resources: ["applications"]
+  verbs: ["get", "list"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: {{ .Release.Name }}-test-rolebinding
+  labels:
+    app.kubernetes.io/name: {{ .Release.Name }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: {{ .Release.Name }}-test-role
+subjects:
+- kind: ServiceAccount
+  name: {{ .Release.Name }}-test-sa

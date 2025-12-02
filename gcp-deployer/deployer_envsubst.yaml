@@ -1,0 +1,21 @@
+# This file is used for local testing with mpdev
+# It provides environment variable substitutions for the deployer
+
+name: wso2-apim-test
+namespace: default
+
+# GCP Configuration
+gcp:
+  enabled: true
+  fs:
+    capacity: "1Ti"
+
+# Component Configuration
+acp:
+  enabled: true
+
+apk:
+  enabled: true
+
+apkagent:
+  enabled: true

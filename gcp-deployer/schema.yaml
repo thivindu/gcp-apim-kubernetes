@@ -1,0 +1,73 @@
+x-google-marketplace:
+  schemaVersion: v2
+  applicationApiVersion: v1beta1
+  publishedVersion: "4.5.0"
+  publishedVersionMetadata:
+    releaseNote: >-
+      Initial release of WSO2 APIM Kubernetes deployment with support for
+      API Manager Control Plane (ACP), API Platform for Kubernetes (APK),
+      and APK Agent integration on Google Cloud Platform.
+    releaseTypes:
+      - Feature
+    recommended: false
+
+  clusterConstraints:
+    resources:
+      - replicas: 1
+        requests:
+          cpu: 500m
+          memory: 1Gi
+    k8sVersion: ">=1.24.0"
+
+  images:
+    wso2am-acp:
+      properties:
+        wso2amAcpImage:
+          type: FULL
+    apk-config-deployer-service:
+      properties:
+        configDeployerImage:
+          type: FULL
+    apk-adapter:
+      properties:
+        adapterImage:
+          type: FULL
+    apk-common-controller:
+      properties:
+        commonControllerImage:
+          type: FULL
+    apk-ratelimiter:
+      properties:
+        ratelimiterImage:
+          type: FULL
+    apk-router:
+      properties:
+        routerImage:
+          type: FULL
+    apk-enforcer:
+      properties:
+        enforcerImage:
+          type: FULL
+    apim-apk-agent:
+      properties:
+        apimApkAgentImage:
+          type: FULL
+
+properties:
+  name:
+    type: string
+    x-google-marketplace:
+      type: NAME
+    title: Application name
+    description: The name of the application instance
+
+  namespace:
+    type: string
+    x-google-marketplace:
+      type: NAMESPACE
+    title: Namespace
+    description: The Kubernetes namespace where the application will be deployed
+
+required:
+  - name
+  - namespace

@@ -1,0 +1,32 @@
+name: test-wso2-apim
+namespace: default
+acp:
+  wso2:
+    deployment:
+      image: "us-docker.pkg.dev/wso2-marketplace-public/wso2-marketplace/wso2am-acp:4.5.0"
+apk:
+  wso2:
+    apk:
+      dp:
+        configdeployer:
+          deployment:
+            image: "us-docker.pkg.dev/wso2-marketplace-public/wso2-marketplace/apk-config-deployer-service:1.3.0"
+        adapter:
+          deployment:
+            image: "us-docker.pkg.dev/wso2-marketplace-public/wso2-marketplace/apk-adapter:1.3.0"
+        commonController:
+          deployment:
+            image: "us-docker.pkg.dev/wso2-marketplace-public/wso2-marketplace/apk-common-controller:1.3.0"
+        ratelimiter:
+          deployment:
+            image: "us-docker.pkg.dev/wso2-marketplace-public/wso2-marketplace/apk-ratelimiter:1.3.0"
+        gatewayRuntime:
+          deployment:
+            router:
+              image: "us-docker.pkg.dev/wso2-marketplace-public/wso2-marketplace/apk-router:1.3.0"
+            enforcer:
+              image: "us-docker.pkg.dev/wso2-marketplace-public/wso2-marketplace/apk-enforcer:1.3.0"
+apkagent:
+  image:
+    repository: "us-docker.pkg.dev/wso2-marketplace-public/wso2-marketplace/apim-apk-agent"
+    tag: "1.3.0"

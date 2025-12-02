@@ -1,0 +1,3 @@
+name: test-app
+namespace: default
+image: us-docker.pkg.dev/wso2-marketplace-public/wso2-marketplace/wso2am-acp:4.5.0

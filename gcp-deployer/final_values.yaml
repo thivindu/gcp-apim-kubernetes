@@ -1,0 +1,4 @@
+imageRepo: us-docker.pkg.dev/wso2-marketplace-public/wso2-marketplace
+imageTag: 4.5.0
+name: test-app
+namespace: default

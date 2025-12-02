@@ -1,0 +1,41 @@
+# Example parameters for deploying WSO2 APIM on GCP
+# Copy this file to parameters.yaml and customize for your deployment
+
+name: wso2-apim-1
+namespace: default
+
+# GCP Configuration
+gcp:
+  enabled: true
+  fs:
+    capacity: "1Ti"
+    fileshares:
+      carbonDB1:
+        fileStoreName: "wso2-apim-filestore"
+        fileShareName: "carbondb1"
+        ip: "10.0.0.2"
+      solr1:
+        fileStoreName: "wso2-apim-filestore"
+        fileShareName: "solr1"
+        ip: "10.0.0.2"
+      carbonDB2:
+        fileStoreName: "wso2-apim-filestore"
+        fileShareName: "carbondb2"
+        ip: "10.0.0.3"
+      solr2:
+        fileStoreName: "wso2-apim-filestore"
+        fileShareName: "solr2"
+        ip: "10.0.0.3"
+
+# Component Configuration
+acp:
+  enabled: true
+
+apk:
+  enabled: true
+
+apkagent:
+  enabled: true
+
+# Additional Helm values can be passed here
+# These will be merged with the chart's default values.yaml

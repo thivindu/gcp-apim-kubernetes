@@ -1,0 +1,24 @@
+x-google-marketplace:
+  schemaVersion: v2
+  # The API version of the application being deployed
+  applicationApiVersion: v1beta1
+
+properties:
+  name:
+    type: string
+    title: "Application name"
+    x-google-marketplace:
+      type: NAME
+
+  namespace:
+    type: string
+    title: "Namespace"
+    x-google-marketplace:
+      type: NAMESPACE
+
+  # Example custom field mapped into Helm values
+  testField:
+    type: string
+    title: "Test Custom Field"
+    x-google-marketplace:
+      type: TESTFIELD
