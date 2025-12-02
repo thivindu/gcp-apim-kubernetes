@@ -22,8 +22,7 @@ metadata:
   labels:
     api-name: "jwks-endpoint"
     api-version: "1.0.0"
-  annotations:
-    "helm.sh/hook": post-install,post-upgrade
+
 spec:
   override:
     disabled: true

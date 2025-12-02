@@ -22,8 +22,6 @@ metadata:
     managed-by: "apk"
   name: {{ template "apk-helm.resource.prefix" . }}-api-create-scope
   namespace: {{ .Release.Namespace }}
-  annotations:
-    "helm.sh/hook": post-install,post-upgrade
 spec:
   names:
   - apk:api_create
