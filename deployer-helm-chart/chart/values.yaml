@@ -3,8 +3,8 @@
 # Copyright (c) 2025, WSO2 LLC. (http://www.wso2.com). All Rights Reserved.
 #
 # This software is the property of WSO2 LLC. and its suppliers, if any.
-# Dissemination of any information or reproduction of any material contained 
-# herein is strictly forbidden, unless permitted by WSO2 in accordance with the 
+# Dissemination of any information or reproduction of any material contained
+# herein is strictly forbidden, unless permitted by WSO2 in accordance with the
 # WSO2 Commercial License available at https://wso2.com/licenses/eula/3.2
 #
 # --------------------------------------------------------------------------------------
@@ -13,7 +13,7 @@
 acp:
   # Enable/disable APK installation
   enabled: true
-  
+
   aws:
     # -- If AWS is used as the cloud provider
     enabled: false
@@ -142,7 +142,7 @@ acp:
       secret:
         # -- Name of the secret
         secretName: ""
-        # -- Version of the secret 
+        # -- Version of the secret
         secretVersion: ""
     # -- Service Account with access to read secrets
     serviceAccountName: ""
@@ -176,7 +176,7 @@ acp:
     # -- Enable AppArmor profiles for the deployment
     enableAppArmor: false
 
-  wso2:  
+  wso2:
     apim:
       # -- APIM version
       version: "4.5.0"
@@ -184,10 +184,10 @@ acp:
       secureVaultEnabled: false
       # Logging related configurations
       log4j2:
-          # -- Console loggers that can be enabled. Allowed values are AUDIT_LOG_CONSOLE, HTTP_ACCESS_CONSOLE, TRANSACTION_CONSOLE, CORRELATION_CONSOLE
-          loggers: ""
-          # -- Appenders
-          appenders: ""
+        # -- Console loggers that can be enabled. Allowed values are AUDIT_LOG_CONSOLE, HTTP_ACCESS_CONSOLE, TRANSACTION_CONSOLE, CORRELATION_CONSOLE
+        loggers: ""
+        # -- Appenders
+        appenders: ""
       # -- Startup arguments for APIM
       startupArgs: ""
       # -- Port Offset for APIM deployment
@@ -200,7 +200,7 @@ acp:
       configurations:
         gatewayType: "Regular,APK,AWS"
         userStore:
-          # -- User store type. 
+          # -- User store type.
           # https://apim.docs.wso2.com/en/latest/administer/managing-users-and-roles/managing-user-stores/configure-primary-user-store/configuring-the-primary-user-store/
           type: "database_unique_id"
           # -- User store properties
@@ -303,32 +303,32 @@ acp:
         gateway:
           # -- APIM Gateway environments
           environments:
-          # - name: "Default"
-          #   type: "hybrid"
-          #   gatewayType: "Regular"
-          #   provider: "wso2"
-          #   visibility:
-          #   displayInApiConsole: true
-          #   description: "This is a hybrid gateway that handles both production and sandbox token traffic."
-          #   showAsTokenEndpointUrl: true
-          #   serviceName: "apim-gw-wso2am-gateway-service"
-          #   servicePort: 9443
-          #   wsHostname: "websocket.wso2.com"
-          #   httpHostname: "gw.wso2.com"
-          #   websubHostname: "websub.wso2.com"
-          - name: "Default_apk"
-            type: "hybrid"
-            provider: "wso2"
-            gatewayType: "APK"
-            displayInApiConsole: true
-            description: "This is a hybrid gateway that handles both production and sandbox token traffic."
-            showAsTokenEndpointUrl: true
-            serviceName: "apim-wso2-apk-gateway-service"
-            servicePort: 9443
-            wsHostname: "websocket.wso2.com"
-            httpHostname: "default.gw.wso2.com:9095"
-            websubHostname: "websub.wso2.com"
-        
+            # - name: "Default"
+            #   type: "hybrid"
+            #   gatewayType: "Regular"
+            #   provider: "wso2"
+            #   visibility:
+            #   displayInApiConsole: true
+            #   description: "This is a hybrid gateway that handles both production and sandbox token traffic."
+            #   showAsTokenEndpointUrl: true
+            #   serviceName: "apim-gw-wso2am-gateway-service"
+            #   servicePort: 9443
+            #   wsHostname: "websocket.wso2.com"
+            #   httpHostname: "gw.wso2.com"
+            #   websubHostname: "websub.wso2.com"
+            - name: "Default_apk"
+              type: "hybrid"
+              provider: "wso2"
+              gatewayType: "APK"
+              displayInApiConsole: true
+              description: "This is a hybrid gateway that handles both production and sandbox token traffic."
+              showAsTokenEndpointUrl: true
+              serviceName: "apim-wso2-apk-gateway-service"
+              servicePort: 9443
+              wsHostname: "websocket.wso2.com"
+              httpHostname: "default.gw.wso2.com:9095"
+              websubHostname: "websub.wso2.com"
+
         syncRuntimeArtifacts:
           gateway:
             # -- Gateway label used to filter out artifact retrieval
@@ -350,13 +350,13 @@ acp:
           servicePort: 9443
 
         publisher:
-          # -- Supported document types in Publisher. 
+          # -- Supported document types in Publisher.
           # This should be used only if there are additional document types to be supported.
           enable_api_doc_visibility: false
           supportedDocumentTypes: ""
           enablePortalConfigurationOnlyMode: false
           internalKeyIssuer: ""
-        
+
         devportal:
           enableApplicationSharing: true
           applicationSharingType: "default"
@@ -381,7 +381,7 @@ acp:
           # -- List of allow-listed scopes
           allowedScopes: ["^device_.*,openid"]
           oauth2JWKSUrl: ""
-        
+
         # APIM Open Tracing configurations
         # https://apim.docs.wso2.com/en/latest/observe/api-manager/traces/monitoring-with-opentracing/
         openTracer:
@@ -417,11 +417,26 @@ acp:
             queue_size: ""
             task_check_interval_minutes: ""
             task_cleanup_interval_minutes: ""
-        
+
         # APIM SDK configurations
         sdk:
-          supportedLanguages: ["android", "java", "csharp", "dart", "groovy", "javascript", "jmeter", "perl", "php", "python", "ruby", "swift5", "clojure"]
-        
+          supportedLanguages:
+            [
+              "android",
+              "java",
+              "csharp",
+              "dart",
+              "groovy",
+              "javascript",
+              "jmeter",
+              "perl",
+              "php",
+              "python",
+              "ruby",
+              "swift5",
+              "clojure",
+            ]
+
         # APIM Transaction Counter configurations
         transactionCounter:
           enabled: false
@@ -431,23 +446,24 @@ acp:
         organization_based_access_control:
           enabled: true
           organization_name_local_claim: "http://wso2.org/claims/organization"
-          organization_id_local_claim: "http://wso2.org/claims/organizationId" 
+          organization_id_local_claim: "http://wso2.org/claims/organizationId"
 
         # -- Add custom configurations to deployment.toml.
         extraConfigs: #|
           # [tenant_mgt]
           # enable_email_domain = true
-          
+
     deployment:
       # Container image configurations
       # image:
-        # -- Container registry credentials.
-        # Specify image pull secrets for private registries
-        # imagePullSecrets:
-        #   enabled: false
-        #   username: ""
-        #   password: ""
-      image: "wso2/wso2am-acp:4.5.0-alpine"
+      # -- Container registry credentials.
+      # Specify image pull secrets for private registries
+      # imagePullSecrets:
+      #   enabled: false
+      #   username: ""
+      #   password: ""
+      image:
+        "wso2/wso2am-acp:4.5.0-alpine"
 
         # -- Registry containing the image
         # registry: "us-east1-docker.pkg.dev"
@@ -534,11 +550,11 @@ acp:
             # -- For persisting the indexed solr data
             solrIndexedData: 50M
 
-# WSO2 APK configuration  
+# WSO2 APK configuration
 apk:
   # Enable/disable APK installation
   enabled: true
-  
+
   wso2:
     subscription:
       imagePullSecrets: ""
@@ -547,7 +563,7 @@ apk:
       helmHooks:
         webhooksCleanupEnabled: false
         webhooksCleanup:
-          enabled : false
+          enabled: false
           image: "bitnamilegacy/kubectl:1.31.1"
       webhooks:
         validatingwebhookconfigurations: false
@@ -625,11 +641,11 @@ apk:
             imagePullPolicy: Always
             image: wso2/apk-config-deployer-service:1.3.0
           # debug: true
-            # configs:
-            #   tls:
-            #     secretName: "my-secret"
-            #     certKeyFilename: "tls.key"
-            #     certFilename: "certchain.crt"
+          # configs:
+          #   tls:
+          #     secretName: "my-secret"
+          #     certKeyFilename: "tls.key"
+          #     certFilename: "certchain.crt"
         adapter:
           deployment:
             resources:
@@ -655,8 +671,8 @@ apk:
               sslHostname: "adapter"
             logging:
               level: "DEBG" # LogLevels can be "DEBG", "FATL", "ERRO", "WARN", "INFO", "PANC"
-          # #          logFormat: "TEXT" # Values can be "JSON", "TEXT"
-            configs: 
+            # #          logFormat: "TEXT" # Values can be "JSON", "TEXT"
+            configs:
               enableGatewayClassController: false
           #   apiNamespaces:
           #     - "apk-v12"
@@ -775,21 +791,21 @@ apk:
               image: wso2/apk-enforcer:1.3.0
               security:
                 sslHostname: "enforcer"
-  #            logging:
-  #              level: DEBUG
+              #            logging:
+              #              level: DEBUG
               env:
-                TOKEN_REVOCATION_ENABLED: "true" 
-  #            configs:
-  #              apiKey:
-  #                enabled: true
-  #                issuer: "https://localhost:9444/oauth2/token"
-  #              tls:
-  #                secretName: "router-cert"
-  #                certKeyFilename: ""
-  #                certFilename: ""
-  #              JWKSClient:
-  #                skipSSLVerification: false
-  #                hostnameVerifier: "AllowAll"
+                TOKEN_REVOCATION_ENABLED: "true"
+      #            configs:
+      #              apiKey:
+      #                enabled: true
+      #                issuer: "https://localhost:9444/oauth2/token"
+      #              tls:
+      #                secretName: "router-cert"
+      #                certKeyFilename: ""
+      #                certFilename: ""
+      #              JWKSClient:
+      #                skipSSLVerification: false
+      #                hostnameVerifier: "AllowAll"
 
       metrics:
         enabled: false
@@ -963,7 +979,7 @@ apk:
 apkagent:
   # Enable/disable APK Agent installation
   enabled: true
-  
+
   wso2:
     subscription:
       imagePullSecrets: ""
@@ -993,7 +1009,7 @@ apkagent:
   dataPlane:
     enabled: true
     k8ResourceEndpoint: https://apim-wso2-apk-config-ds-service.default.svc.cluster.local:9443/api/configurator/apis/generate-k8s-resources
-    namespace: default
+
   metrics:
     enabled: false
   agent:

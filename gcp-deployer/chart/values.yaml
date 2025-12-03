@@ -1009,7 +1009,7 @@ apkagent:
   dataPlane:
     enabled: true
     k8ResourceEndpoint: https://apim-wso2-apk-config-ds-service.default.svc.cluster.local:9443/api/configurator/apis/generate-k8s-resources
-    namespace: default
+
   metrics:
     enabled: false
   agent:

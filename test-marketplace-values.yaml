@@ -1,5 +1,5 @@
 name: test-wso2-apim
-namespace: default
+
 acp:
   wso2:
     deployment:
