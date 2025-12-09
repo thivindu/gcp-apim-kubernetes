@@ -35,5 +35,3 @@ terraform.rc
 # Ignore values files that might contain secrets
 values-*.yaml
 secrets.yaml
-
-*.zip
