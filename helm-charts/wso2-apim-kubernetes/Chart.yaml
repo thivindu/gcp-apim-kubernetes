@@ -32,13 +32,13 @@ dependencies:
     condition: acp.enabled
 
   - name: apk-helm
-    version: 1.3.0-1
-    repository: https://github.com/wso2/apk/releases/download/1.3.0-1
+    version: 1.3.0-3
+    repository: "file://charts"
     alias: apk
     condition: apk.enabled
   
   - name: apim-apk-agent
-    version: 1.3.0
-    repository: https://github.com/wso2/product-apim-tooling/releases/download/1.3.0
+    version: 1.3.1
+    repository: "file://charts"
     alias: apkagent
     condition: apkagent.enabled
